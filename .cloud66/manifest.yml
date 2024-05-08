@@ -7,6 +7,7 @@ _default: &default
       operating_system: ubuntu2204
       ruby_version: 3.3.1
       asset_pipeline_precompile: false
+      tamper_with_yml: false
   postgresql:
     server: external
 
