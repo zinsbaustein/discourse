@@ -11,7 +11,7 @@ _default: &default
       run_on: all_servers
 
   after_bundle:
-    - command: cd $STACK_PATH && yarn install
+    - command: cd $STACK_PATH && yarn
       target: rails
       run_on: all_servers
 
