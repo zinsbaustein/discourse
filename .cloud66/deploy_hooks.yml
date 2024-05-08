@@ -5,7 +5,7 @@ _default: &default
       sudo: true
       run_on: all_servers
 
-    - command: apt-get install --yes gcc build-essential libxslt-dev libxml2-dev zlib1g-dev libpq-dev imagemagick brotli
+    - command: apt-get install --yes gcc build-essential libxslt-dev libxml2-dev zlib1g-dev libpq-dev imagemagick brotli terser
       target: rails
       sudo: true
       run_on: all_servers
