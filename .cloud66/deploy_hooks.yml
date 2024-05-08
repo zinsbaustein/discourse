@@ -15,6 +15,11 @@ _default: &default
       target: rails
       run_on: all_servers
 
+  after_symlink:
+    - command: cd $STACK_PATH && RAILS_ENV=production RAILS_GROUPS=assets bundle exec rake assets:precompile
+      target: rails
+      run_on: all_servers
+
 production:
   <<: *default
 
