@@ -6,7 +6,7 @@ _default: &default
     configuration:
       operating_system: ubuntu2204
       ruby_version: 3.3.1
-      asset_pipeline_precompile: false
+      asset_pipeline_precompile: true
       node_version: "18" # will install latest v18.x.x
   postgresql:
     server: external
