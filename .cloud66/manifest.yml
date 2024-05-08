@@ -1,0 +1,17 @@
+_default: &default
+  load_balancer:
+    configuration:
+      alb_ssl_policy: ELBSecurityPolicy-TLS13-1-2-2021-06
+  rails:
+    configuration:
+      operating_system: ubuntu2204
+      ruby_version: 3.3.1
+      asset_pipeline_precompile: false
+  postgresql:
+    server: external
+
+production:
+  <<: *default
+
+staging:
+  <<: *default

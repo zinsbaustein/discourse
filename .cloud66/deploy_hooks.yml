@@ -1,0 +1,22 @@
+_default: &default
+  first_thing:
+    - command: apt-get update
+      target: rails
+      sudo: true
+      run_on: all_servers
+
+    - command: apt-get install --yes gcc build-essential libxslt-dev libxml2-dev zlib1g-dev libpq-dev imagemagick
+      target: rails
+      sudo: true
+      run_on: all_servers
+
+  after_bundle:
+    - command: cd $STACK_PATH && npm ci
+      target: rails
+      run_on: all_servers
+
+production:
+  <<: *default
+
+staging:
+  <<: *default
