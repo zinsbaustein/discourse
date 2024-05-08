@@ -11,7 +11,7 @@ _default: &default
       run_on: all_servers
 
   after_bundle:
-    - command: cd $STACK_PATH && bin/ember-cli
+    - command: cd $STACK_PATH && bin/ember-cli || (exit 0)
       target: rails
       run_on: all_servers
 
