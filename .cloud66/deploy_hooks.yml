@@ -10,11 +10,6 @@ _default: &default
       sudo: true
       run_on: all_servers
 
-  after_bundle:
-    - command: cd $STACK_PATH && npm ci
-      target: rails
-      run_on: all_servers
-
 production:
   <<: *default
 
