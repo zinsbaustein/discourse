@@ -9,8 +9,6 @@ _default: &default
       asset_pipeline_precompile: false
   postgresql:
     server: external
-    configuration:
-      tamper_with_yml: false
 
 production:
   <<: *default
