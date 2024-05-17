@@ -6,15 +6,34 @@ _default: &default
       run_on: all_servers
 
     - command: apt-get install --yes gcc build-essential libxslt-dev libxml2-dev zlib1g-dev libpq-dev imagemagick
-        brotli pngcrush pngquant
+        brotli pngcrush pngquant jhead jpegoptim
       target: rails
       sudo: true
       run_on: all_servers
 
-#  after_bundle:
-#    - command: cd $STACK_PATH && NODE_ENV=production yarn install --production=false && sudo RAILS_ENV=production RAILS_GROUPS=assets bundle exec rake assets:precompile:build
-#      target: rails
-#      run_on: all_servers
+    # Required for assets:precompile to work (for ES6 support).
+    - command: npm install -g terser
+      target: rails
+      sudo: true
+      run_on: all_servers
+
+  after_bundle:
+    # Without the dev dependencies, patch-package can't be found (run on postinstall in package.json).
+    - command: cd $STACK_PATH && yarn install --production=false --frozen-lockfile && yarn cache clean
+      target: rails
+      run_on: all_servers
+
+    - command: cd $STACK_PATH && LOAD_PLUGINS=0 bundle exec rake plugin:pull_compatible_all
+      target: rails
+      run_on: all_servers
+
+    - command: cd $STACK_PATH && bundle exec rake assets:precompile:build
+      target: rails
+      run_on: all_servers
+
+    - command: cd $STACK_PATH && SKIP_EMBER_CLI_COMPILE=1 bundle exec rake themes:update assets:precompile
+      target: rails
+      run_on: all_servers
 
 production:
   <<: *default
