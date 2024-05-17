@@ -1,0 +1,23 @@
+_default: &default
+  first_thing:
+    - command: apt-get update
+      target: rails
+      sudo: true
+      run_on: all_servers
+
+    - command: apt-get install --yes gcc build-essential libxslt-dev libxml2-dev zlib1g-dev libpq-dev imagemagick
+        brotli pngcrush pngquant
+      target: rails
+      sudo: true
+      run_on: all_servers
+
+#  after_bundle:
+#    - command: cd $STACK_PATH && NODE_ENV=production yarn install --production=false && sudo RAILS_ENV=production RAILS_GROUPS=assets bundle exec rake assets:precompile:build
+#      target: rails
+#      run_on: all_servers
+
+production:
+  <<: *default
+
+staging:
+  <<: *default
