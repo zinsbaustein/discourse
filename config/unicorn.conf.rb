@@ -18,12 +18,12 @@ working_directory discourse_path
 # listen "#{discourse_path}/tmp/sockets/unicorn.sock"
 
 # stree-ignore
-listen ENV["UNICORN_LISTENER"] || "#{(ENV["UNICORN_BIND_ALL"] ? "" : "127.0.0.1:")}#{(ENV["UNICORN_PORT"] || 3000).to_i}"
+listen "#{ENV['CUSTOM_WEB_SOCKET_FILE']}", backlog: 64
 
 FileUtils.mkdir_p("#{discourse_path}/tmp/pids") if !File.exist?("#{discourse_path}/tmp/pids")
 
-# feel free to point this anywhere accessible on the filesystem
-pid(ENV["UNICORN_PID_PATH"] || "#{discourse_path}/tmp/pids/unicorn.pid")
+# stree-ignore
+pid "#{ENV['CUSTOM_WEB_PID_FILE']}"
 
 if ENV["RAILS_ENV"] != "production"
   logger Logger.new(STDOUT)
