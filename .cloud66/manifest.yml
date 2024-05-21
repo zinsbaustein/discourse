@@ -1,4 +1,9 @@
 _default: &default
+  load_balancer:
+    configuration:
+      httpchk: /srv/status
+      alb_ssl_policy: ELBSecurityPolicy-TLS13-1-2-2021-06
+
   rails:
     configuration:
       operating_system: ubuntu2204
