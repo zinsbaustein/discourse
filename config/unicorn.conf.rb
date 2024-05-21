@@ -17,13 +17,11 @@ working_directory discourse_path
 
 # listen "#{discourse_path}/tmp/sockets/unicorn.sock"
 
-# stree-ignore
-listen "#{ENV['CUSTOM_WEB_SOCKET_FILE']}", backlog: 64
+listen "#{ENV["CUSTOM_WEB_SOCKET_FILE"]}", backlog: 64
 
 FileUtils.mkdir_p("#{discourse_path}/tmp/pids") if !File.exist?("#{discourse_path}/tmp/pids")
 
-# stree-ignore
-pid "#{ENV['CUSTOM_WEB_PID_FILE']}"
+pid "#{ENV["CUSTOM_WEB_PID_FILE"]}"
 
 if ENV["RAILS_ENV"] != "production"
   logger Logger.new(STDOUT)
@@ -52,6 +50,16 @@ check_client_connection false
 
 initialized = false
 before_fork do |server, worker|
+  old_pid = "#{ENV["CUSTOM_WEB_PID_FILE"]}.oldbin"
+
+  if File.exist?(old_pid) && server.pid != old_pid
+    begin
+      Process.kill("QUIT", File.read(old_pid).to_i)
+    rescue Errno::ENOENT, Errno::ESRCH
+      # someone else did our job for us
+    end
+  end
+
   unless initialized
     Discourse.preload_rails!
 
