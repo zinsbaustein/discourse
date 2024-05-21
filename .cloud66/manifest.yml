@@ -10,6 +10,9 @@ _default: &default
       ruby_version: 3.3.1
       asset_pipeline_precompile: false
       node_version: "20" # will install latest v20.x.x
+      health_check:
+        protocol: https
+        endpoint: /srv/status
 
   postgresql:
     server: external
