@@ -24,6 +24,10 @@ _default: &default
       target: rails
       run_on: all_servers
 
+    - command: cd $STACK_PATH && bundle exec rake db:prepare
+      target: rails
+      run_on: all_servers
+
     - command: cd $STACK_PATH && LOAD_PLUGINS=0 bundle exec rake plugin:pull_compatible_all
       target: rails
       run_on: all_servers
