@@ -11,6 +11,7 @@ _default: &default
       sudo: true
       run_on: all_servers
 
+  after_node:
     # Required for assets:precompile to work (for ES6 support).
     - command: npm install -g terser
       target: rails
