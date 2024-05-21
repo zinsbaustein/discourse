@@ -6,7 +6,7 @@ _default: &default
       run_on: all_servers
 
     - command: apt-get install --yes gcc build-essential libxslt-dev libxml2-dev zlib1g-dev libpq-dev imagemagick
-        brotli pngcrush pngquant jhead jpegoptim
+        brotli pngcrush pngquant jhead jpegoptim postgresql-client
       target: rails
       sudo: true
       run_on: all_servers
