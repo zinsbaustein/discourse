@@ -8,18 +8,12 @@ if (ENV["LOGSTASH_UNICORN_URI"] || "").length > 0
   logger DiscourseLogstashLogger.logger(uri: ENV["LOGSTASH_UNICORN_URI"], type: :unicorn)
 end
 
-discourse_path = File.expand_path(File.expand_path(File.dirname(__FILE__)) + "/../")
-
 # tune down if not enough ram
 worker_processes (ENV["UNICORN_WORKERS"] || 3).to_i
 
-working_directory discourse_path
-
-# listen "#{discourse_path}/tmp/sockets/unicorn.sock"
+working_directory "#{ENV["STACK_PATH"]}"
 
 listen "#{ENV["CUSTOM_WEB_SOCKET_FILE"]}", backlog: 64
-
-FileUtils.mkdir_p("#{discourse_path}/tmp/pids") if !File.exist?("#{discourse_path}/tmp/pids")
 
 pid "#{ENV["CUSTOM_WEB_PID_FILE"]}"
 
@@ -31,8 +25,8 @@ else
   # By default, the Unicorn logger will write to stderr.
   # Additionally, some applications/frameworks log to stderr or stdout,
   # so prevent them from going to /dev/null when daemonized here:
-  stderr_path "#{discourse_path}/log/unicorn.stderr.log"
-  stdout_path "#{discourse_path}/log/unicorn.stdout.log"
+  stderr_path "#{ENV["STACK_PATH"]}/log/unicorn.stderr.log"
+  stdout_path "#{ENV["STACK_PATH"]}/log/unicorn.stdout.log"
   # nuke workers after 30 seconds instead of 60 seconds (the default)
   timeout 30
 end
