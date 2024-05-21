@@ -24,9 +24,10 @@ _default: &default
       target: rails
       run_on: all_servers
 
-    - command: cd $STACK_PATH && bundle exec rake db:prepare
+    - command: cd $STACK_PATH && bundle exec rake db:create && bundle exec rake db:migrate
       target: rails
       run_on: all_servers
+      apply_during: build_only
 
     - command: cd $STACK_PATH && LOAD_PLUGINS=0 bundle exec rake plugin:pull_compatible_all
       target: rails
