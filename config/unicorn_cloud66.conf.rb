@@ -26,6 +26,8 @@ before_fork do |server, _worker|
   # as there's no need for the master process to hold a connection
   ActiveRecord::Base.connection.disconnect!
 
+  Discourse.redis.close
+
   # XXX
   # The following is only recommended for memory/DB-constrained
   # installations.  It is not needed if your system can house
@@ -76,9 +78,6 @@ before_fork do |server, _worker|
   #         master_sleep_orig(sec)
   #       end
   #     end
-
-  # XXX
-  # Discourse.redis.close
 
   # XXX
   # Throttle the master from forking too quickly by sleeping.  Due
