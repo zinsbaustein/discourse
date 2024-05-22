@@ -20,7 +20,7 @@ _default: &default
 
   after_bundle:
     # Without the dev dependencies, patch-package can't be found (run on postinstall in package.json).
-    - command: cd $STACK_PATH && yarn install --production=false --frozen-lockfile && yarn cache clean
+    - command: cd $STACK_PATH && yarn install --production=false --frozen-lockfile
       target: rails
       run_on: all_servers
 
