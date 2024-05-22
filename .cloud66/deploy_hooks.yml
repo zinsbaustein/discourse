@@ -44,6 +44,7 @@ _default: &default
   after_symlink:
     - command: mkdir -p $STACK_BASE/shared/uploads && chown nginx:app_writers $STACK_BASE/shared/uploads && rm -rf $STACK_PATH/public/uploads && ln -nsf $STACK_BASE/shared/uploads $STACK_PATH/public/uploads
       target: rails
+      sudo: true
       run_on: all_servers
 
 production:
