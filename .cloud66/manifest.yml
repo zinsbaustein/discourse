@@ -19,11 +19,6 @@ _default: &default
     configuration:
       tamper_with_yml: false
 
-  redis:
-    configuration:
-      version: 7.2.4
-      operating_system: ubuntu2204
-
 production:
   <<: *default
 
