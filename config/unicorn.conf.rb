@@ -8,14 +8,22 @@ if (ENV["LOGSTASH_UNICORN_URI"] || "").length > 0
   logger DiscourseLogstashLogger.logger(uri: ENV["LOGSTASH_UNICORN_URI"], type: :unicorn)
 end
 
+discourse_path = File.expand_path(File.expand_path(File.dirname(__FILE__)) + "/../")
+
 # tune down if not enough ram
 worker_processes (ENV["UNICORN_WORKERS"] || 3).to_i
 
-working_directory "#{ENV["STACK_PATH"]}"
+working_directory discourse_path
 
-listen "#{ENV["CUSTOM_WEB_SOCKET_FILE"]}", backlog: 64
+# listen "#{discourse_path}/tmp/sockets/unicorn.sock"
 
-pid "#{ENV["CUSTOM_WEB_PID_FILE"]}"
+# stree-ignore
+listen ENV["UNICORN_LISTENER"] || "#{(ENV["UNICORN_BIND_ALL"] ? "" : "127.0.0.1:")}#{(ENV["UNICORN_PORT"] || 3000).to_i}"
+
+FileUtils.mkdir_p("#{discourse_path}/tmp/pids") if !File.exist?("#{discourse_path}/tmp/pids")
+
+# feel free to point this anywhere accessible on the filesystem
+pid(ENV["UNICORN_PID_PATH"] || "#{discourse_path}/tmp/pids/unicorn.pid")
 
 if ENV["RAILS_ENV"] != "production"
   logger Logger.new(STDOUT)
@@ -25,8 +33,8 @@ else
   # By default, the Unicorn logger will write to stderr.
   # Additionally, some applications/frameworks log to stderr or stdout,
   # so prevent them from going to /dev/null when daemonized here:
-  stderr_path "#{ENV["STACK_PATH"]}/log/unicorn.stderr.log"
-  stdout_path "#{ENV["STACK_PATH"]}/log/unicorn.stdout.log"
+  stderr_path "#{discourse_path}/log/unicorn.stderr.log"
+  stdout_path "#{discourse_path}/log/unicorn.stdout.log"
   # nuke workers after 30 seconds instead of 60 seconds (the default)
   timeout 30
 end
@@ -44,16 +52,6 @@ check_client_connection false
 
 initialized = false
 before_fork do |server, worker|
-  old_pid = "#{ENV["CUSTOM_WEB_PID_FILE"]}.oldbin"
-
-  if File.exist?(old_pid) && server.pid != old_pid
-    begin
-      Process.kill("QUIT", File.read(old_pid).to_i)
-    rescue Errno::ENOENT, Errno::ESRCH
-      # someone else did our job for us
-    end
-  end
-
   unless initialized
     Discourse.preload_rails!
 
