@@ -22,11 +22,9 @@ check_client_connection false
 # run_once = true
 
 before_fork do |server, _worker|
-  # XXX
-  #   # the following is highly recomended for Rails + "preload_app true"
-  #   # as there's no need for the master process to hold a connection
-  #   defined?(ActiveRecord::Base) and
-  #     ActiveRecord::Base.connection.disconnect!
+  # the following is highly recomended for Rails + "preload_app true"
+  # as there's no need for the master process to hold a connection
+  ActiveRecord::Base.connection.disconnect!
 
   # XXX
   # The following is only recommended for memory/DB-constrained
@@ -92,10 +90,8 @@ end
 
 # See `Discourse.after_fork`: All forking servers must call this after fork, otherwise Discourse will be in a bad state.
 after_fork do |_server, _worker|
-  # XXX
-  # # the following is *required* for Rails + "preload_app true",
-  # defined?(ActiveRecord::Base) and
-  #   ActiveRecord::Base.establish_connection
+  # the following is *required* for Rails + "preload_app true",
+  ActiveRecord::Base.establish_connection
 
   DiscourseEvent.trigger(:web_fork_started)
   Discourse.after_fork
