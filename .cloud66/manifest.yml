@@ -6,6 +6,7 @@ _default: &default
 
   rails:
     configuration:
+      iam_instance_profile_name: forum-s3
       operating_system: ubuntu2204
       ruby_version: 3.3.1
       asset_pipeline_precompile: false
